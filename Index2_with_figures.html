@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Maths Helper - Random Question Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+    .form-group { margin-bottom: 10px; }
+    select, button { padding: 5px 10px; }
+    .diagram { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Maths Helper</h1>
+  <p>Generate random questions by Grade, Topic, and Cognitive Level</p>
+
+  <div class="form-group">
+    <label for="gradeSelect">Grade:</label>
+    <select id="gradeSelect">
+      <option value="Grade 8">Grade 8</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="topicSelect">Topic:</label>
+    <select id="topicSelect">
+      <option value="Algebra">Algebra</option>
+      <option value="Geometry">Geometry</option>
+      <option value="Numbers">Numbers & Operations</option>
+      <option value="Fractions">Fractions</option>
+      <option value="Equations">Equations</option>
+      <option value="Graphs">Graphs</option>
+      <option value="Probability">Probability</option>
+      <option value="Measurement">Measurement</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="levelSelect">Cognitive Level:</label>
+    <select id="levelSelect">
+      <option value="Knowledge">Knowledge</option>
+      <option value="Application">Application</option>
+      <option value="Reasoning">Reasoning</option>
+    </select>
+  </div>
+  <button onclick="showQuestion()">Generate Question</button>
+
+  <div id="questionDisplay" style="margin-top:20px; font-size:18px;"></div>
+
+  
+<script>
+const questionBank = {
+  "Grade 8": {
+    "Geometry": {
+      "Knowledge": [
+        {
+          text: "Identify the parts of this triangle.",
+          image: "triangle-diagram"
+        },
+        {
+          text: "How many degrees are in a straight angle?",
+          image: null
+        }
+      ],
+      "Application": [
+        {
+          text: "Find the area of the triangle shown.",
+          image: "triangle-area"
+        }
+      ],
+      "Reasoning": [
+        {
+          text: "Explain why the sum of angles in any triangle is 180°.",
+          image: "triangle-sum"
+        }
+      ]
+    },
+    "Graphs": {
+      "Knowledge": [
+        {
+          text: "Identify the y-intercept on this line.",
+          image: "line-graph"
+        }
+      ],
+      "Application": [
+        {
+          text: "What is the slope of this line?",
+          image: "slope-graph"
+        }
+      ],
+      "Reasoning": [
+        {
+          text: "Explain how you would plot the function y = 2x + 1.",
+          image: "function-graph"
+        }
+      ]
+    },
+    "Algebra": {
+      "Knowledge": [{ text: "What is the value of x if x + 5 = 10?", image: null }],
+      "Application": [{ text: "Simplify: 2(x + 3) + 4", image: null }],
+      "Reasoning": [{ text: "Explain the steps in solving: 3x - 4 = 2", image: null }]
+    },
+    "Numbers": {
+      "Knowledge": [{ text: "What is the smallest prime number?", image: null }],
+      "Application": [{ text: "Round 78.456 to the nearest tenth.", image: null }],
+      "Reasoning": [{ text: "Why is 0.75 the same as 3/4?", image: null }]
+    },
+    "Fractions": {
+      "Knowledge": [{ text: "What is 1/2 + 1/4?", image: null }],
+      "Application": [{ text: "Simplify: 12/16", image: null }],
+      "Reasoning": [{ text: "Why do we need a common denominator to add fractions?", image: null }]
+    },
+    "Equations": {
+      "Knowledge": [{ text: "What does the term 'solve for x' mean?", image: null }],
+      "Application": [{ text: "Solve: 2x + 3 = 11", image: null }],
+      "Reasoning": [{ text: "Explain how to check a solution to an equation.", image: null }]
+    },
+    "Probability": {
+      "Knowledge": [{ text: "What is the chance of flipping heads on a coin?", image: null }],
+      "Application": [{ text: "If a bag has 3 red balls and 2 blue, what’s P(blue)?", image: null }],
+      "Reasoning": [{ text: "Explain the difference between theoretical and experimental probability.", image: null }]
+    },
+    "Measurement": {
+      "Knowledge": [{ text: "How many centimeters in 1 meter?", image: null }],
+      "Application": [{ text: "Convert 2.5km to meters", image: null }],
+      "Reasoning": [{ text: "Why is it important to use consistent units when measuring?", image: null }]
+    }
+  }
+};
+
+function getRandomQuestion(grade, topic, level) {
+  const questions = questionBank[grade][topic][level];
+  const index = Math.floor(Math.random() * questions.length);
+  return questions[index];
+}
+
+function showQuestion() {
+  const grade = document.getElementById("gradeSelect").value;
+  const topic = document.getElementById("topicSelect").value;
+  const level = document.getElementById("levelSelect").value;
+  const question = getRandomQuestion(grade, topic, level);
+  document.getElementById("questionDisplay").innerHTML = question.text +
+    (question.image ? '<div class="diagram" id="diagram-' + question.image + '"></div>' : '');
+  renderDiagram(question.image);
+}
+
+function renderDiagram(name) {
+  if (!name) return;
+  const container = document.getElementById("diagram-" + name);
+  if (!container) return;
+
+  const diagrams = {
+    "triangle-diagram": '<svg width="100" height="80"><polygon points="10,70 50,10 90,70" stroke="black" stroke-width="2" fill="none" /></svg>',
+    "triangle-area": '<svg width="100" height="80"><polygon points="10,70 50,10 90,70" stroke="blue" stroke-width="2" fill="lightblue" /><text x="45" y="75" font-size="12">base</text><text x="52" y="30" font-size="12">height</text></svg>',
+    "triangle-sum": '<svg width="100" height="80"><polygon points="10,70 50,10 90,70" stroke="black" stroke-width="2" fill="none" /><text x="5" y="75">A</text><text x="50" y="5">B</text><text x="90" y="75">C</text></svg>',
+    "line-graph": '<svg width="150" height="150"><line x1="0" y1="100" x2="150" y2="0" stroke="black" stroke-width="2" /><line x1="0" y1="150" x2="0" y2="0" stroke="gray" /><line x1="0" y1="150" x2="150" y2="150" stroke="gray" /><circle cx="0" cy="100" r="4" fill="red" /></svg>',
+    "slope-graph": '<svg width="150" height="150"><line x1="20" y1="130" x2="120" y2="30" stroke="green" stroke-width="2" /><text x="70" y="85" font-size="12">Slope</text></svg>',
+    "function-graph": '<svg width="150" height="150"><line x1="0" y1="150" x2="150" y2="0" stroke="black" /><line x1="75" y1="0" x2="75" y2="150" stroke="gray" /><line x1="0" y1="75" x2="150" y2="75" stroke="gray" /></svg>'
+  };
+
+  container.innerHTML = diagrams[name] || '';
+}
+
+questionBank["Grade 9"] = {
+  "Geometry": {
+    "Knowledge": [
+      { text: "What is the sum of interior angles in a quadrilateral?", image: null },
+      { text: "Define a radius and a diameter.", image: "circle-labels" }
+    ],
+    "Application": [
+      { text: "Find the volume of a cube with edge length 5cm.", image: "cube-diagram" }
+    ],
+    "Reasoning": [
+      { text: "Explain how you would determine if a triangle is right-angled.", image: "triangle-right" }
+    ]
+  },
+  "Graphs": {
+    "Knowledge": [
+      { text: "What does the slope of a line represent?", image: null }
+    ],
+    "Application": [
+      { text: "Determine the gradient of the line shown.", image: "line-gradient" }
+    ],
+    "Reasoning": [
+      { text: "Explain the steps to draw y = -x + 3", image: "function-negative-slope" }
+    ]
+  },
+  "Algebra": {
+    "Knowledge": [{ text: "Define a polynomial.", image: null }],
+    "Application": [{ text: "Factorise: x^2 + 5x + 6", image: null }],
+    "Reasoning": [{ text: "Explain how to solve a quadratic equation using the quadratic formula.", image: null }]
+  },
+  "Numbers": {
+    "Knowledge": [{ text: "What is the square root of 81?", image: null }],
+    "Application": [{ text: "Convert 0.875 to a fraction.", image: null }],
+    "Reasoning": [{ text: "Why is dividing by zero undefined?", image: null }]
+  },
+  "Fractions": {
+    "Knowledge": [{ text: "What is 3/4 ÷ 2/3?", image: null }],
+    "Application": [{ text: "Simplify the complex fraction: (3/4) ÷ (5/8)", image: null }],
+    "Reasoning": [{ text: "Explain how to convert a mixed number to an improper fraction.", image: null }]
+  },
+  "Equations": {
+    "Knowledge": [{ text: "What does it mean to solve an equation?", image: null }],
+    "Application": [{ text: "Solve for x: 2x^2 - 8 = 0", image: null }],
+    "Reasoning": [{ text: "Explain how to check if a value is a solution to an equation.", image: null }]
+  },
+  "Probability": {
+    "Knowledge": [{ text: "What is the probability of rolling a 6 on a fair die?", image: null }],
+    "Application": [{ text: "What is the probability of drawing an ace from a deck of cards?", image: null }],
+    "Reasoning": [{ text: "Explain the difference between independent and dependent events.", image: null }]
+  },
+  "Measurement": {
+    "Knowledge": [{ text: "What units are used to measure volume?", image: null }],
+    "Application": [{ text: "Convert 3.6km to meters.", image: null }],
+    "Reasoning": [{ text: "Explain how to calculate surface area of a rectangular prism.", image: null }]
+  }
+};
+
+function renderDiagram(name) {
+  if (!name) return;
+  const container = document.getElementById("diagram-" + name);
+  if (!container) return;
+
+  const diagrams = {
+    ...{
+      "triangle-diagram": '<svg width="100" height="80"><polygon points="10,70 50,10 90,70" stroke="black" stroke-width="2" fill="none" /></svg>',
+      "triangle-area": '<svg width="100" height="80"><polygon points="10,70 50,10 90,70" stroke="blue" stroke-width="2" fill="lightblue" /><text x="45" y="75" font-size="12">base</text><text x="52" y="30" font-size="12">height</text></svg>',
+      "triangle-sum": '<svg width="100" height="80"><polygon points="10,70 50,10 90,70" stroke="black" stroke-width="2" fill="none" /><text x="5" y="75">A</text><text x="50" y="5">B</text><text x="90" y="75">C</text></svg>',
+      "triangle-right": '<svg width="100" height="80"><polygon points="10,70 10,10 90,70" stroke="black" stroke-width="2" fill="none" /><text x="15" y="20">90°</text></svg>',
+      "line-graph": '<svg width="150" height="150"><line x1="0" y1="100" x2="150" y2="0" stroke="black" stroke-width="2" /><line x1="0" y1="150" x2="0" y2="0" stroke="gray" /><line x1="0" y1="150" x2="150" y2="150" stroke="gray" /><circle cx="0" cy="100" r="4" fill="red" /></svg>',
+      "slope-graph": '<svg width="150" height="150"><line x1="20" y1="130" x2="120" y2="30" stroke="green" stroke-width="2" /><text x="70" y="85" font-size="12">Slope</text></svg>',
+      "function-graph": '<svg width="150" height="150"><line x1="0" y1="150" x2="150" y2="0" stroke="black" /><line x1="75" y1="0" x2="75" y2="150" stroke="gray" /><line x1="0" y1="75" x2="150" y2="75" stroke="gray" /></svg>',
+      "circle-labels": '<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="2" fill="none" /><line x1="50" y1="50" x2="90" y2="50" stroke="red" /><text x="60" y="45">radius</text><line x1="10" y1="50" x2="90" y2="50" stroke="blue" /><text x="40" y="65">diameter</text></svg>',
+      "cube-diagram": '<svg width="120" height="100"><rect x="30" y="20" width="60" height="60" fill="lightblue" stroke="black"/><line x1="30" y1="20" x2="20" y2="10" stroke="black"/><line x1="90" y1="20" x2="80" y2="10" stroke="black"/><line x1="20" y1="10" x2="80" y2="10" stroke="black"/><line x1="20" y1="10" x2="20" y2="70" stroke="black"/><line x1="80" y1="10" x2="80" y2="70" stroke="black"/><line x1="80" y1="70" x2="90" y2="80" stroke="black"/><line x1="20" y1="70" x2="30" y2="80" stroke="black"/></svg>',
+      "line-gradient": '<svg width="150" height="150"><line x1="20" y1="120" x2="120" y2="20" stroke="orange" stroke-width="2" /><text x="60" y="75">Gradient</text></svg>',
+      "function-negative-slope": '<svg width="150" height="150"><line x1="0" y1="0" x2="150" y2="150" stroke="black" /><text x="80" y="75" font-size="12">y = -x + 3</text></svg>'
+    }
+  };
+
+  container.innerHTML = diagrams[name] || '';
+}
+
+</script>
+
+</body>
+</html>
